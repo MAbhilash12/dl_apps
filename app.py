@@ -124,12 +124,11 @@ batch_size_value = st.sidebar.selectbox("Batch Computation Window", options=[16,
 # --- 5. DATA FETCHING & PROCESSING ---
 @st.cache_data(ttl=3600)
 def fetch_sequential_market_logs(ticker):
-    df = yfinance.download(ticker, start="2020-01-01", end="2026-01-01", progress=False)
+    df = yf.download(ticker, start="2020-01-01", end="2026-01-01", progress=False)
     return df
 
 with st.spinner(f"Establishing secure connection to {ticker_symbol} market data..."):
     try:
-        import yfinance
         raw_data = fetch_sequential_market_logs(ticker_symbol)
         if raw_data.empty:
             st.error("Error: Received completely empty token payload check from source records.")
@@ -227,7 +226,11 @@ with tab1:
             plot_bgcolor='rgba(0,0,0,0)',
             font=dict(color="white"),
             xaxis=dict(title="", showgrid=False, tickfont=dict(color="white")),
-            yaxis=dict(title="Asset Valuation ($)", gridcolor='#2d3748', titlefont=dict(color="white"), tickfont=dict(color="white")),
+            yaxis=dict(
+                title=dict(text="Asset Valuation ($)", font=dict(color="white")), 
+                gridcolor='#2d3748', 
+                tickfont=dict(color="white")
+            ),
             height=400, margin=dict(l=0, r=0, t=10, b=0),
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="white"))
         )
